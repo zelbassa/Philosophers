@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 12:32:50 by prizmo            #+#    #+#             */
-/*   Updated: 2024/12/13 17:17:45 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/12/23 10:07:56 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,39 +28,27 @@ void	*monitor(void *data)
 	return (NULL);
 }
 
-size_t	set_think_time(t_philo *philo)
-{
-	size_t	think_time;
-
-	if (philo->data->death_time < philo->data->sleep_time
-		+ philo->data->eat_time)
-		think_time = 50;
-	else if (philo->data->death_time
-		- (philo->data->eat_time + philo->data->sleep_time) > 50)
-		think_time = ((philo->data->death_time - philo->data->eat_time) / 2);
-	else
-		think_time = 0;
-	return (think_time);
-}
-
 void	*routine(void *data)
 {
-	size_t	think_time;
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
-	think_time = set_think_time(philo);
-	if (philo->id % 2 == 0)
-		ft_usleep(think_time);
 	while (alive(philo))
 	{
-		if (philo->id % 2 == 0)
-			ft_usleep(10);
+		if (philo->data->philo_count % 2 == 0)
+		{
+			if (philo->id % 2 == 0)
+				ft_usleep(10);
+		}
+		else
+		{
+			if (philo->id % 2 != 0)
+				ft_usleep(10);
+		}
 		eat(philo);
 		write_message(philo, SLEEP);
 		ft_usleep(philo->data->sleep_time);
 		write_message(philo, THINK);
-		think_time = set_think_time(philo);
 	}
 	return (data);
 }
